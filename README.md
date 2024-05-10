@@ -1,22 +1,64 @@
 <h1>Sample Database design, creation, and management</h1>
 <p>This Project was a course project where I was asked create a mock database and data warehouse for an accounting firm</p>
+<h2>Step 1: Design an Entity Relationship Diagram for the Database</h2>
+<p>In this step I determined which entities would be most important for the mock accounting firm. I determined that
+<br> it would be best to keep it simple. This ERD contains relationships between the small accounting firm's employees, 
+<br> the clients (booking, payroll, tax, etc) who receive and pay invoices for services performed.</p>
+<img width="1036" alt="ERD" src="https://github.com/heinerkace/GoodStart/assets/159738836/f6b7e8ee-3860-4e80-8b4c-df4ae39157d6">
+<h2>Step 2: Design an ERD for the data warehouse</h2>
+<p>First I needed to determine what dimensions I wanted to focus on in the data warehouse. 
+<br> I decided on Time, Client, Invoice, and Aggregates related to the firm's revenue.
+<br> I then designed a Star Schema ERD for the data warehouse. </p>
+<img width="998" alt="starschema" src="https://github.com/heinerkace/GoodStart/assets/159738836/23f29bf7-3ba1-45f5-bf0d-61adff877773">
 
-<h3>ERD for Database and Data warehouse</h3>
-<img width="659" alt="Screenshot 2024-05-08 at 7 31 47 PM" src="https://github.com/heinerkace/GoodStart/assets/159738836/6b26d4f6-13b9-4fab-8470-6530398e0251">
-<img width="529" alt="Screenshot 2024-05-08 at 7 31 54 PM" src="https://github.com/heinerkace/GoodStart/assets/159738836/3d889a6c-a87f-42ab-9472-0df3ca25e263">
+<p>With the ERDs created and the database and warehouse outline, it was then time to create the database inside
+<br>SQL Server Management Studio. </p>
 
-<h3>Creation of database in SSMS</h3>
-<img width="719" alt="CreateTable1" src="https://github.com/heinerkace/GoodStart/assets/159738836/927337f3-3c20-4ebd-be31-2dbd4739d3c8">
-<img width="777" alt="Createtable2" src="https://github.com/heinerkace/GoodStart/assets/159738836/c4920aab-7ab9-4683-8e17-b1474f233af1">
+<h2>Step 3: Use SQL to create tables to hold our data </h2>
+<p>Here I created tables for all the entities in our ERD diagram (only 4 are shown here)
+<br><br> It was important to include the correct datatypes and sizes for when I generated the random data later one. 
+<br> </p>
+<img width="356" alt="CreateDB" src="https://github.com/heinerkace/GoodStart/assets/159738836/2a335492-b30c-453a-9d79-760e18260e81">
+<h2>Step 4: Create the data warehouse as a separate Database in SSMS</h2>
+<h3>Here is the same being done but for the tables in the data warehouse. </h3>
 
-<h3>Populating the tables with randomly generated data</h3>
-<img width="736" alt="PopDb1" src="https://github.com/heinerkace/GoodStart/assets/159738836/5b4f1564-6725-407d-ba72-044cd752a37f">
-<img width="743" alt="PopTable1" src="https://github.com/heinerkace/GoodStart/assets/159738836/86a5e120-cb24-490a-a4e4-ea48ccfdb113">
-<img width="764" alt="pop3" src="https://github.com/heinerkace/GoodStart/assets/159738836/d06057a4-9561-4407-a96f-832ca4fc9edb">
+<img width="768" alt="CreateDW" src="https://github.com/heinerkace/GoodStart/assets/159738836/6140d7c0-8111-4928-87cf-2b4e95cd2bb3">
 
-<h3>Procedural SQL to populate Data warehouse tables</h3>
-<img width="777" alt="proc1real" src="https://github.com/heinerkace/GoodStart/assets/159738836/3ac4dc7e-877c-4223-82b1-9fa8efd227ad">
-<img width="689" alt="Proc1" src="https://github.com/heinerkace/GoodStart/assets/159738836/ea4a1063-d264-4273-8599-e6fa9c319ef4">
-<img width="772" alt="function" src="https://github.com/heinerkace/GoodStart/assets/159738836/950dc797-d875-47c4-b1de-5f2c807306cc">
-<h4>This a trigger to update invoice status to paid when Payment is made in payment table</h4>
-<img width="737" alt="Trigger" src="https://github.com/heinerkace/GoodStart/assets/159738836/5ea49189-0cd5-4008-80f1-233f33bd1bfe">
+<h2>Step 5: Generating Random Data for the tables</h2>
+<p> I wanted some good sample data for the databse, so I used an website called Mockaroo to generate random
+<br> data for the tables. Those data were exported to CSV files and that copied into SQL code to populate the databse tables. </p>
+<img width="973" alt="TablesPop1" src="https://github.com/heinerkace/GoodStart/assets/159738836/16632de1-c23d-4278-92aa-b6be8c344aac">
+<img width="887" alt="TablesPop3" src="https://github.com/heinerkace/GoodStart/assets/159738836/f5a81486-9fc1-4772-870c-a2debae5a95f">
+
+<h2>Step 6: Using Procedural SQL programs to populate the data warehouse </h2>
+<p>I used a few different procedural SQL programs written from scratch to populate the data warehouse tables
+<br>These programs make use of disabling referential integrity and enabling it after the program is run
+<br> in order to disable foreign key constraints for values not yet used. </p>
+<h3>Populating the InvoiceDimension table</h3>
+<p>In this program, I simply selected all the values from the already populated Invoice Table from the Accounting 
+<br> database and inserted them into the data warehouse table. I did the same for the client dimesion.  </p>
+<img width="562" alt="dimInvoiceProc" src="https://github.com/heinerkace/GoodStart/assets/159738836/b5a28c65-8764-41d9-abb5-4c3a1a77cb8d">
+<img width="503" alt="DimClientProc" src="https://github.com/heinerkace/GoodStart/assets/159738836/cbdf1aca-af7a-4576-9c21-53a8e9fd56f5">
+
+<h3>Populating the Time Dimension Table</h3>
+<p>Part of the Time dimension table is an attribute called dateId. This is an ID created from a calendar date. 
+<br> I created this ID for each date called by using a Function</p>
+<h4>DateID Function</h4>
+<p>In this function called FetchDateID, I create two variables for the Date and Hour. I then set those variables equal
+<br> to the date passed when the function is called. 
+<br> The DateID variable is set to the cast of the datepart and hourpart variables. The format of the dateID
+<br> should be yyyymmdd, so I used style 112 to format the results as such. 
+<br> DateID is returned by the function</p>
+<img width="448" alt="DateIdFunction" src="https://github.com/heinerkace/GoodStart/assets/159738836/431602fa-daf4-4d01-8abd-ef6b9d004904">
+<h4>Time Demension Table Procedure</h4>
+<p>The popdimTime procedure utlizes the FetchDateID function to populate the dateId portion of the dimTime Table. 
+<br>It then goes through a loop from April 20 of 2023 to April 20 of 2024 and populates the table with values from
+<br> each date during that time period. </p>
+<img width="598" alt="dimTIme" src="https://github.com/heinerkace/GoodStart/assets/159738836/1d72bdd1-2961-4e97-a556-8c856cdae3e4">
+
+<h3>Using a Trigger to Update Invoice Status when Payment is received</h3>
+<p> I created a trigger to update the status of an invoice from 'Pending' to 'Paid' when a new row is added
+<br> to the payments table (A payment is received). 
+<br>It uses 'after insert' and the keyword 'inserted' to access the row or rows that are newly inserted in the update
+<br> to the Payment table.</p>
+<img width="1035" alt="FunctionTrigger" src="https://github.com/heinerkace/GoodStart/assets/159738836/5f0a5740-f749-4663-bf30-cac1dfaa78f2">
